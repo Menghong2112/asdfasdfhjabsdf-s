@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop 79 Store Login</title>
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Main Wrapper for Sidebar Push Effect */
+        #main-wrapper {
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Utility Class to Hide Elements */
+        .hidden {
+            display: none !important;
+        }
+
+        /* --- Login Form Styles (Unchanged) --- */
+        .login-container {
+            min-height: 100vh; 
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f4f4f4;
+        }
+
+        .login-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+        }
+
+        .login-box h3 {
+            margin-top: 0;
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .login-box input[type="text"],
+        .login-box input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 12px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background 0.3s;
+        }
+
+        .login-box button:hover {
+            background: #0056b3;
+        }
+        /* --- End Login Form Styles --- */
+
+
+        /* Shop Content Styles (Only visible after login) */
+        
+        /* === FIXED HEADER STYLES === */
+        .header-shop {
+            background: #222;
+            color: #fff;
+            padding: 15px 20px;
+            position: fixed; 
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+            position: relative; 
+        }
+        
+        .header-shop h1 {
+            margin: 0 0 10px 0;
+            font-size: 28px;
+            text-align: center;
+        }
+        
+        .header-nav {
+            width: 100%;
+            text-align: center;
+        }
+
+        .header-nav a {
+            color: #fff;
+            margin: 0 15px;
+            text-decoration: none;
+            font-size: 18px;
+            padding-bottom: 5px;
+            display: inline-block;
+        }
+
+        .header-nav a:hover {
+            color: #ffd600;
+        }
+        
+        /* === HAMBURGER MENU ICON === */
+        .menu-icon {
+            position: absolute;
+            left: 20px; 
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 30px; 
+            cursor: pointer;
+            color: #fff;
+            padding: 5px;
+            line-height: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            height: 25px;
+            width: 30px;
+        }
+
+        .menu-icon span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background-color: #fff;
+            border-radius: 2px;
+        }
+
+        /* === OFF-CANVAS SIDEBAR === */
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1001;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.3s;
+            padding-top: 60px;
+            color: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+        }
+
+        .sidebar .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+            cursor: pointer;
+            color: #ccc;
+        }
+
+        .sidebar .closebtn:hover {
+            color: #fff;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-menu li {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 20px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .sidebar-menu li:hover {
+            color: #f1f1f1;
+            background-color: #333;
+        }
+        
+        .sidebar-submenu {
+            list-style: none;
+            padding-left: 40px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background-color: #222;
+        }
+
+        .sidebar-submenu.open {
+            max-height: 200px;
+            transition: max-height 0.5s ease-in;
+        }
+
+        .sidebar-submenu li {
+            font-size: 17px;
+            padding: 8px 8px 8px 45px;
+            color: #bbb;
+        }
+
+        .sidebar-submenu li:hover {
+            color: #f1f1f1;
+            background-color: #444;
+        }
+
+
+        /* === CONTENT OFFSET FOR FIXED HEADER === */
+        .content-wrap {
+            padding-top: 90px;
+        }
+
+
+        /* Hero Section */
+        .hero {
+            background: url('https://images.unsplash.com/photo-1542291026-7eec264c27ff') center/cover no-repeat;
+            height: 450px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h2 {
+            font-size: 50px;
+            text-shadow: 3px 3px 8px black;
+        }
+
+        /* Products Grid */
+        .products {
+            padding: 40px;
+            text-align: center;
+        }
+
+        .products h3 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .product {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: left;
+            position: relative;
+        }
+
+        .product img {
+            width: 100%;
+            height: 180px;
+            object-fit: contain;
+            background-color: white;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .product h4 {
+            margin: 10px 0 5px 0;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .product p {
+            color: #555;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .product button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: #222;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .product button:hover {
+            background: #ffd600;
+            color: black;
+        }
+
+        .edit-product-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 8px;
+            cursor: pointer;
+            font-size: 14px;
+            display: none;
+        }
+
+        .edit-product-btn:hover {
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        /* --- FOOTER & SOCIAL BAR STYLES --- */
+        footer {
+            background: #222;
+            color: white;
+            text-align: center;
+            padding-top: 15px;
+            margin-top: 40px;
+        }
+
+        .social-bar {
+            padding: 20px 0;
+            text-align: center;
+            border-top: 1px solid #444;
+        }
+
+        .social-bar a {
+            display: inline-block;
+            margin: 0 10px;
+            font-size: 0;
+            transition: transform 0.2s;
+            line-height: 0;
+        }
+
+        .social-bar a:hover {
+            transform: scale(1.1);
+        }
+
+        /* Styles for the image icons */
+        .social-icon-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            display: block;
+        }
+        
+        .footer-placeholder {
+            min-height: 30px;
+            width: 100%;
+            background-color: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1em;
+            color: #ddd;
+        }
+
+        .footer-copyright {
+            padding: 15px;
+            background: #111;
+            font-size: 0.9em;
+        }
+
+        .footer-contact {
+            margin-top: 5px;
+            font-size: 0.9em;
+            color: #bbb;
+        }
+
+        /* --- MODAL STYLES (Unchanged) --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 30px;
+            border: 1px solid #888;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .modal-content h3 {
+            text-align: center;
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .modal-content input[type="text"],
+        .modal-content input[type="number"],
+        .modal-content input[type="url"],
+        .modal-content input[type="file"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .modal-content .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-content .modal-buttons button {
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .modal-content .modal-buttons .save-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+        }
+
+        .modal-content .modal-buttons .cancel-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <section id="login-section" class="login-container">
+        <div class="login-box">
+            <h3>Login</h3>
+            <form id="loginForm">
+                <input type="text" id="username" placeholder="Username" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <button type="submit">Log In</button>
+            </form>
+        </div>
+    </section>
+
+    <div id="shopContent" class="hidden">
+        
+        <div id="sidebar" class="sidebar">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <ul class="sidebar-menu">
+                <li onclick="toggleSubmenu('productManagementSubmenu')">Product Management &#9662;</li>
+                <ul id="productManagementSubmenu" class="sidebar-submenu">
+                    <li onclick="openAddProductModal()">Add New Product</li>
+                    <li onclick="openEditProductModal()">Edit Existing Product</li>
+                    <li onclick="alert('Admin: Update Product Pictures is for advanced features.')">Update Product Pictures</li> 
+                </ul>
+                <li onclick="closeShop()">Close Shop</li>
+            </ul>
+        </div>
+
+        <div id="main-wrapper">
+            <header class="header-shop">
+                <div class="menu-icon" onclick="openNav()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <h1>Shop 79 Store</h1>
+                <nav id="mainNav" class="header-nav">
+                    <a href="#">Home</a>
+                    <a href="#products-section">Products</a>
+                    <a href="#">Contact</a>
+                    <a href="#">About</a>
+                </nav>
+            </header>
+
+            <div class="content-wrap">
+                <section class="hero">
+                    <h2>Welcome to Shop 79 Store</h2>
+                </section>
+
+                <section id="products-section" class="products">
+                    <h3>Featured Products</h3>
+
+                    <div class="product-grid" id="productGrid">
+                        
+                        <div class="product" data-id="1">
+                            <img src="https://i.imgur.com/8Qh1XzQ.png" alt="Product 1 Red Shoe" title="Replace with your final Pinterest image link" >
+                            <h4>Product Name 1</h4>
+                            <p>$19.99</p>
+                            <button>Add to Cart</button>
+                             <button class="edit-product-btn hidden" onclick="prepareEditProduct(this)">Edit</button>
+                        </div>
+
+                        <div class="product" data-id="2">
+                            <img src="https://i.imgur.com/n6BfA2l.png" alt="Product 2 Blue Sneaker" title="Replace with your final Pinterest image link" >
+                            <h4>Product Name 2</h4>
+                            <p>$24.99</p>
+                            <button>Add to Cart</button>
+                            <button class="edit-product-btn hidden" onclick="prepareEditProduct(this)">Edit</button>
+                        </div>
+
+                        <div class="product" data-id="3">
+                            <img src="https://i.imgur.com/tYt6ZqE.png" alt="Product 3 Green Plant" title="Replace with your final Pinterest image link" >
+                            <h4>Product Name 3</h4>
+                            <p>$15.99</p>
+                            <button>Add to Cart</button>
+                            <button class="edit-product-btn hidden" onclick="prepareEditProduct(this)">Edit</button>
+                        </div>
+
+                        <div class="product" data-id="4">
+                            <img src="https://via.placeholder.com/300/FFFF00/000000?text=Product+4" alt="Product 4">
+                            <h4>Product Name 4</h4>
+                            <p>$29.99</p>
+                            <button>Add to Cart</button>
+                            <button class="edit-product-btn hidden" onclick="prepareEditProduct(this)">Edit</button>
+                        </div>
+                    </div>
+                </section>
+
+                <footer>
+                    <div class="social-bar">
+                        <a href="https://t.me/Meng_Hong_21" target="_blank" aria-label="Join us on Telegram">
+                            <img src="https://i.imgur.com/yvQ1c8F.png" alt="Telegram" class="social-icon-img">
+                        </a>
+                        <a href="#" target="_blank" aria-label="Join us on Facebook">
+                            <img src="https://i.imgur.com/8e5Jm1F.png" alt="Facebook" class="social-icon-img">
+                        </a>
+                        <a href="#" target="_blank" aria-label="Join us on Instagram">
+                            <img src="https://i.imgur.com/G9c2X3i.png" alt="Instagram" class="social-icon-img">
+                        </a>
+                        <a href="#" target="_blank" aria-label="Join us on Twitter">
+                            <span class="social-icon twitter social-icon-img" style="background-color: #00acee;"></span> 
+                        </a>
+                    </div>
+                    
+                    <div class="footer-placeholder">
+                        </div>
+
+                    <div class="footer-copyright">
+                        © 2025 Shop 79 Store – All Rights Reserved
+                        <div class="footer-contact">
+                            Contact: <a href="tel:+855889806783" style="color: #bbb; text-decoration: none;">+855 88 980 6783</a>
+                        </div>
+                    </div>
+                </footer>
+            </div> 
+        </div> 
+    </div> 
+
+    <div id="addProductModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('addProductModal')">&times;</span>
+            <h3>Add New Product</h3>
+            <form id="addProductForm">
+                <label for="newProductName">Product Name:</label>
+                <input type="text" id="newProductName" required>
+
+                <label for="newProductPrice">Price:</label>
+                <input type="number" id="newProductPrice" step="0.01" required>
+
+                <label for="newProductImage">Image URL:</label>
+                <input type="url" id="newProductImage" placeholder="e.g., https://example.com/image.jpg" required>
+                
+                <div class="modal-buttons">
+                    <button type="button" class="cancel-btn" onclick="closeModal('addProductModal')">Cancel</button>
+                    <button type="submit" class="save-btn">Add Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="editProductModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('editProductModal')">&times;</span>
+            <h3>Edit Product</h3>
+            <form id="editProductForm">
+                <input type="hidden" id="editProductId">
+
+                <label for="editProductName">Product Name:</label>
+                <input type="text" id="editProductName" required>
+
+                <label for="editProductPrice">Price:</label>
+                <input type="number" id="editProductPrice" step="0.01" required>
+
+                <label for="editProductImage">Image URL:</label>
+                <input type="url" id="editProductImage" placeholder="e.g., https://example.com/image.jpg" required>
+                
+                <div class="modal-buttons">
+                    <button type="button" class="cancel-btn" onclick="closeModal('editProductModal')">Cancel</button>
+                    <button type="submit" class="save-btn">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // --- Login Logic ---
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); 
+
+            const usernameInput = document.getElementById('username').value;
+            const passwordInput = document.getElementById('password').value;
+
+            const correctUser = 'MengHong';
+            const correctPass = 'MengHong2112@##';
+
+            const loginSection = document.getElementById('login-section');
+            const shopContent = document.getElementById('shopContent');
+
+            if (usernameInput === correctUser && passwordInput === correctPass) {
+                alert('Login Successful! Welcome to Shop 79 Store.');
+                loginSection.style.display = 'none'; 
+                shopContent.classList.remove('hidden');
+                
+                document.querySelectorAll('.edit-product-btn').forEach(button => {
+                    button.classList.remove('hidden');
+                });
+
+                window.scrollTo(0, 0); 
+            } else {
+                alert('Login Failed. Invalid username or password.');
+            }
+        });
+
+        // --- Sidebar/Hamburger Menu Logic ---
+        function openNav() {
+            document.getElementById("sidebar").style.width = "250px";
+            document.getElementById("main-wrapper").style.marginLeft = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("sidebar").style.width = "0";
+            document.getElementById("main-wrapper").style.marginLeft = "0";
+            document.querySelectorAll('.sidebar-submenu.open').forEach(submenu => {
+                submenu.classList.remove('open');
+            });
+        }
+
+        function toggleSubmenu(id) {
+            const submenu = document.getElementById(id);
+            if (submenu) {
+                submenu.classList.toggle('open');
+            }
+        }
+
+        // --- Modal Logic ---
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            if (modalId === 'addProductModal') {
+                document.getElementById('addProductForm').reset();
+            }
+            if (modalId === 'editProductModal') {
+                document.getElementById('editProductForm').reset();
+            }
+        }
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+                if (event.target.id === 'addProductModal') {
+                    document.getElementById('addProductForm').reset();
+                }
+                if (event.target.id === 'editProductModal') {
+                    document.getElementById('editProductForm').reset();
+                }
+            }
+        }
+
+
+        // --- Product Management Logic ---
+        let productIdCounter = 4;
+
+        function createProductElement(id, name, price, imageUrl) {
+            const productDiv = document.createElement('div');
+            productDiv.classList.add('product');
+            productDiv.dataset.id = id;
+
+            productDiv.innerHTML = `
+                <img src="${imageUrl}" alt="${name}">
+                <h4>${name}</h4>
+                <p>$${parseFloat(price).toFixed(2)}</p>
+                <button>Add to Cart</button>
+                <button class="edit-product-btn" onclick="prepareEditProduct(this)">Edit</button>
+            `;
+            return productDiv;
+        }
+
+        // Add Product
+        function openAddProductModal() {
+            closeNav();
+            openModal('addProductModal');
+        }
+
+        document.getElementById('addProductForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            productIdCounter++;
+            const name = document.getElementById('newProductName').value;
+            const price = document.getElementById('newProductPrice').value;
+            const imageUrl = document.getElementById('newProductImage').value;
+
+            const newProduct = createProductElement(productIdCounter, name, price, imageUrl);
+            document.getElementById('productGrid').appendChild(newProduct);
+            
+            newProduct.querySelector('.edit-product-btn').classList.remove('hidden');
+
+            alert('Product added successfully!');
+            closeModal('addProductModal');
+        });
+
+        // Edit Product
+        let currentEditingProductElement = null;
+
+        function openEditProductModal() {
+            closeNav();
+            alert('Please click the "Edit" button on the specific product you wish to modify.');
+        }
+
+        function prepareEditProduct(editButton) {
+            closeNav();
+            currentEditingProductElement = editButton.closest('.product');
+            if (!currentEditingProductElement) return;
+
+            const id = currentEditingProductElement.dataset.id;
+            const name = currentEditingProductElement.querySelector('h4').textContent;
+            const priceText = currentEditingProductElement.querySelector('p').textContent;
+            const price = parseFloat(priceText.replace('$', ''));
+            const imageUrl = currentEditingProductElement.querySelector('img').src;
+
+            document.getElementById('editProductId').value = id;
+            document.getElementById('editProductName').value = name;
+            document.getElementById('editProductPrice').value = price;
+            document.getElementById('editProductImage').value = imageUrl;
+
+            openModal('editProductModal');
+        }
+
+        document.getElementById('editProductForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            if (!currentEditingProductElement) {
+                alert('No product selected for editing.');
+                return;
+            }
+            
+            const newName = document.getElementById('editProductName').value;
+            const newPrice = document.getElementById('editProductPrice').value;
+            const newImageUrl = document.getElementById('editProductImage').value;
+
+            currentEditingProductElement.querySelector('h4').textContent = newName;
+            currentEditingProductElement.querySelector('p').textContent = `$${parseFloat(newPrice).toFixed(2)}`;
+            currentEditingProductElement.querySelector('img').src = newImageUrl;
+            currentEditingProductElement.querySelector('img').alt = newName;
+
+            alert('Product updated successfully!');
+            closeModal('editProductModal');
+            currentEditingProductElement = null;
+        });
+
+        // --- Close Shop Logic ---
+        function closeShop() {
+            closeNav();
+            document.getElementById('shopContent').classList.add('hidden');
+            alert('The shop is now closed.');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            closeModal('addProductModal');
+            closeModal('editProductModal');
+        });
+
+    </script>
+
+</body>
+</html>
